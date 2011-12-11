@@ -1,19 +1,19 @@
 require 'thor'
 
 module Travis
-  module Cli
-    class Deploy < Thor
-      include Cli
+  class Cli
+    class Deploy
+      include Helper
 
-      namespace 'travis'
+      attr_reader :shell, :remote, :options
 
-      desc 'deploy', 'Deploy to the given remote'
-      method_option :migrate, :aliases => '-m', :type => :boolean, :default => false
-      method_option :configure, :aliases => '-c', :type => :boolean, :default => false
-
-      def deploy(remote)
+      def initialize(shell, remote, options)
         @remote = remote
+        @options = options
+        @shell = shell
+      end
 
+      def invoke
         if clean?
           tag if production?
           configure if configure?
@@ -34,7 +34,7 @@ module Travis
 
         def push
           say "Deploying to #{remote}"
-          run "git push #{remote} HEAD:master"
+          run "git push #{remote} HEAD:master #{'-f' if force?}".strip
         end
 
         def tag
@@ -67,15 +67,19 @@ module Travis
         end
 
         def configure?
-          !!options[:configure]
+          !!options['configure']
         end
 
         def configure
-          invoke Config, :sync, [remote], :restart => false
+          Config.new(remote, shell, :restart => false)
+        end
+
+        def force?
+          !!options['force']
         end
 
         def migrate?
-          !!options[:migrate]
+          !!options['migrate']
         end
 
         def migrate

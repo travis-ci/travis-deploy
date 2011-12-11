@@ -1,42 +1,29 @@
-require 'travis/cli/config'
-require 'travis/cli/deploy'
+require 'thor'
 
 module Travis
   autoload :Keychain, 'travis/keychain'
 
-  module Cli
+  class Cli < Thor
     autoload :Config, 'travis/cli/config'
     autoload :Deploy, 'travis/cli/deploy'
+    autoload :Helper, 'travis/cli/helper'
 
-    protected
+    namespace 'travis'
 
-      def run(cmd, options = {})
-        with_clean_env do
-          cmd = cmd.strip
-          puts "$ #{options[:echo] || cmd}" unless options[:echo].is_a?(FalseClass)
-          system cmd
-        end
-      end
+    desc 'config', 'Sync config between keychain, app and local working directory'
+    method_option :restart, :aliases => '-r', :type => :boolean, :default => true
+    method_option :backup,  :aliases => '-b', :type => :boolean, :default => false
 
-      def say(message)
-        shell.say(message, :green)
-      end
+    def config(remote)
+      Config.new(shell, remote, options).invoke
+    end
 
-      def error(message)
-        message = shell.set_color(message, :red)
-        shell.error(message)
-        exit 1
-      end
+    desc 'deploy', 'Deploy to the given remote'
+    method_option :migrate, :aliases => '-m', :type => :boolean, :default => false
+    method_option :configure, :aliases => '-c', :type => :boolean, :default => false
 
-      def with_clean_env
-        if defined?(Bundler)
-          Bundler.with_clean_env do
-            ENV['RUBYOPT'] = nil
-            yield
-          end
-        else
-          yield
-        end
-      end
+    def deploy(remote)
+      Deploy.new(shell, remote, options).invoke
+    end
   end
 end

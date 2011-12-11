@@ -8,6 +8,19 @@ end
 require 'travis/cli'
 require 'mocha'
 
+module Mock
+  class Shell
+    def messages
+      @messages ||= []
+    end
+
+    def say(*args)
+      messages << args
+    end
+    alias :error :say
+  end
+end
+
 module Kernel
   def capture_stdout
     out = StringIO.new

@@ -1,50 +1,45 @@
 require 'spec_helper'
 
 describe Travis::Cli::Config do
-  let(:keychain) { Travis::Keychain.any_instance }
-  let(:command)  { Travis::Cli::Config.any_instance }
-
-  def invoke(remote, options = {})
-    capture_stdout do
-      Travis::Cli::Config.new.invoke('sync', [remote], options)
-    end
-  end
+  let(:shell)  { Mock::Shell.new }
+  let(:config) { "staging:\n  foo: bar" }
 
   before :each do
-    Travis::Cli::Config.class_eval { (class << self; self; end).send(:define_method, :method_added) { |*| } }
-    command.stubs(:system)
-    keychain.stubs(:fetch).returns('')
+    Travis::Cli::Config.any_instance.stubs(:clean?).returns(true)
+    Travis::Cli::Config.any_instance.stubs(:run)
+    Travis::Keychain.any_instance.stubs(:fetch).returns(config)
     File.stubs(:open)
   end
 
   describe 'sync' do
-    before :each do
-      command.stubs(:clean?).returns(true)
-    end
-
     it 'fetches the config from the keychain' do
-      keychain.expects(:fetch).returns('')
-      invoke 'staging'
+      command = Travis::Cli::Config.new(shell, 'staging', {})
+      command.send(:keychain).expects(:fetch).returns(config)
+      command.invoke
     end
 
     it 'writes the config to the local config file' do
+      command = Travis::Cli::Config.new(shell, 'staging', {})
       File.expects(:open).with { |path, mode| path =~ %r(config/travis.yml) }
-      invoke 'staging'
+      command.invoke
     end
 
     it 'pushes the config to the given heroku remote' do
-      command.expects(:run).with { |cmd, options| cmd =~ %r(heroku config:add travis_config=.* -r staging) }
-      invoke 'staging'
+      command = Travis::Cli::Config.new(shell, 'staging', {})
+      command.expects(:run).with { |cmd, options| cmd =~ /heroku config:add travis_config=.* -r staging/m }
+      command.invoke
     end
 
     it 'restarts the app when --restart is given' do
+      command = Travis::Cli::Config.new(shell, 'staging', 'restart' => true)
       command.expects(:restart)
-      invoke 'staging', :restart => true
+      command.invoke
     end
 
     it 'does not restart the app when --restart is not given' do
+      command = Travis::Cli::Config.new(shell, 'staging', {})
       command.expects(:restart).never
-      invoke 'staging'
+      command.invoke
     end
   end
 end

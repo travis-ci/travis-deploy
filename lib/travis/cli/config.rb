@@ -1,26 +1,28 @@
 require 'thor'
 require 'shellwords'
 require 'fileutils'
+require 'yaml'
 
 module Travis
-  module Cli
-    class Config < Thor
-      include Cli
+  class Cli
+    class Config
+      include Helper
 
-      namespace 'travis:config'
+      attr_reader :shell, :remote, :options
 
-      desc 'sync', 'Sync config between keychain, app and local working directory'
-      method_option :restart, :aliases => '-r', :type => :boolean, :default => true
-      def sync(remote)
+      def initialize(shell, remote, options)
         @remote = remote
+        @options = options
+        @shell = shell
+      end
+
+      def invoke
         store
         push
         restart if restart?
       end
 
       protected
-
-        attr_reader :remote
 
         def app
           @app ||= begin
@@ -31,7 +33,11 @@ module Travis
         end
 
         def config
-          @config ||= Keychain.new(app, shell).fetch
+          @config ||= keychain.fetch
+        end
+
+        def keychain
+          @keychain ||= Keychain.new(app, shell)
         end
 
         def store
@@ -40,15 +46,19 @@ module Travis
         end
 
         def push
-          run "heroku config:add travis_config=#{Shellwords.escape(config)} -r #{remote}", :echo => "heroku config:add travis_config=... -r #{app}"
+          say 'Configuring the app ...'
+          config = Shellwords.escape(YAML.dump(YAML.load(self.config)[remote]))
+          run "heroku config:add travis_config=#{config} -r #{remote}", :echo => "heroku config:add travis_config=... -r #{app}"
         end
 
         def restart
+          say 'Restarting the app ...'
           run "heroku restart -r #{remote}"
         end
 
         def backup
-          run 'cp #{filename} #{filename}.backup'
+          say 'Backing up the old config file ...'
+          run "cp #{filename} #{filename}.backup"
         end
 
         def restart?
