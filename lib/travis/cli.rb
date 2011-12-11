@@ -1,5 +1,7 @@
 require 'thor'
 
+$stdout.sync = true
+
 module Travis
   autoload :Keychain, 'travis/keychain'
 
