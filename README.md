@@ -20,8 +20,8 @@ Deploying to `staging` will just push to staging and run the migrations if `-m` 
 
 Deploying to production will also update the production branch and tag the current commit.
 
-    $ git checkout production
     Updating production branch.
+    $ git checkout production
     $ git reset --hard master
     $ git push origin production -f
     Tagging deploy 2011-12-11 16:04.
@@ -30,6 +30,7 @@ Deploying to production will also update the production branch and tag the curre
     $ git checkout master
     Deploying to production.
     $ git push production HEAD:master -f
+    Running migrations.
     $ heroku run rake db:migrate -r production
 
 WARNING:

@@ -36,8 +36,8 @@ module Travis
         end
 
         def tag
+          say "Updating production branch."
           with_branch('production') do |branch|
-            say "Updating production branch."
             run "git reset --hard #{branch}"
             run 'git push origin production -f'
 
