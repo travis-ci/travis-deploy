@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.description  = "[description]"
 
   s.files        = Dir['{lib/**/*,spec/**/*,[A-Z]*}']
-  s.platform     = Gem::Platform::RUBY
+  s.executables  = Dir['bin/*'].map { |path| File.basename(path) }
   s.require_path = 'lib'
   s.rubyforge_project = '[none]'
 

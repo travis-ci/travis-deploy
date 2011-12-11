@@ -1,0 +1,11 @@
+#!/usr/bin/env ruby
+
+$: << File.expand_path('../../lib', __FILE__)
+
+require 'rubygems'
+require 'travis/cli'
+require 'thor/runner'
+
+klass, task = Thor::Util.find_class_and_task_by_namespace("travis:#{ARGV.shift}")
+ARGV.unshift(task) if task
+klass.start(ARGV, :shell => Thor::Base.shell.new)
