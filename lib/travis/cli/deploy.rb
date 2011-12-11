@@ -15,7 +15,7 @@ module Travis
 
       def invoke
         if clean?
-          tag if production?
+          tag if remote == 'production'
           configure if configure?
           push
           migrate if migrate?
@@ -33,18 +33,20 @@ module Travis
         end
 
         def push
-          say "Deploying to #{remote}"
-          run "git push #{remote} HEAD:master #{'-f' if force?}".strip
+          say "Deploying to #{remote}."
+          run "git push #{remote} HEAD:master -f".strip
         end
 
         def tag
-          say "Tagging #{version}"
           with_branch('production') do |branch|
+            say "Updating production branch."
             run "git reset --hard #{branch}"
-            run 'git push origin production'
+            run 'git push origin production -f'
+
+            say "Tagging #{version}."
+            run "git tag -a '#{version.gsub(':', '-').gsub(' ', '.')}' -m '#{version}'"
+            run 'git push --tags'
           end
-          run "git tag -a 'deploy #{version}' -m 'deploy #{version}'"
-          run 'git push --tags'
         end
 
         def with_branch(target)
@@ -55,15 +57,11 @@ module Travis
         end
 
         def branch
-          `git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1 /'`
+          `git branch --no-color 2> /dev/null` =~ /\* (.*)$/ && $1
         end
 
         def version
           @version ||= "deploy #{Time.now.utc.strftime('%Y-%m-%d %H:%M')}"
-        end
-
-        def production?
-          remote == 'production'
         end
 
         def configure?
@@ -71,11 +69,7 @@ module Travis
         end
 
         def configure
-          Config.new(remote, shell, :restart => false)
-        end
-
-        def force?
-          !!options['force']
+          Config.new(shell, remote, :restart => false).invoke
         end
 
         def migrate?
@@ -83,6 +77,7 @@ module Travis
         end
 
         def migrate
+          say 'Running migrations'
           run "heroku run rake db:migrate -r #{remote}"
         end
     end

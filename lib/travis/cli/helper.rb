@@ -6,7 +6,7 @@ module Travis
         def run(cmd, options = {})
           cmd = cmd.strip
           puts "$ #{options[:echo] || cmd}" unless options[:echo].is_a?(FalseClass)
-          system cmd
+          exit unless system(cmd)
         end
 
         def say(message)

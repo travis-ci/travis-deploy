@@ -19,41 +19,41 @@ describe Travis::Cli::Deploy do
       let(:command) { Travis::Cli::Deploy.new(shell, 'production', {}) }
 
       before :each do
-        command.stubs(:system)
+        command.stubs(:system).returns(true)
       end
 
       it 'switches to the production branch' do
-        command.expects(:system).with('git checkout production')
+        command.expects(:system).with('git checkout production').returns(true)
         command.invoke
       end
 
       it 'resets the production branch to the current branch' do
-        command.expects(:system).with('git reset --hard master')
+        command.expects(:system).with('git reset --hard master').returns(true)
         command.invoke
       end
 
       it 'pushes the production branch to origin' do
-        command.expects(:system).with('git push origin production')
+        command.expects(:system).with('git push origin production -f').returns(true)
         command.invoke
       end
 
       it 'switches back to the previous branch' do
-        command.expects(:system).with('git checkout master')
+        command.expects(:system).with('git checkout master').returns(true)
         command.invoke
       end
 
       it 'tags the current commit ' do
-        command.expects(:system).with { |cmd| cmd =~ /git tag -a 'deploy .*' -m 'deploy .*'/ }
+        command.expects(:system).with { |cmd| cmd =~ /git tag -a 'deploy.*' -m 'deploy.*'/ }.returns(true)
         command.invoke
       end
 
       it 'pushes the tag to origin' do
-        command.expects(:system).with('git push --tags')
+        command.expects(:system).with('git push --tags').returns(true)
         command.invoke
       end
 
       it 'pushes to the given remote' do
-        command.expects(:system).with('git push production HEAD:master')
+        command.expects(:system).with('git push production HEAD:master -f').returns(true)
         command.invoke
       end
     end
@@ -62,7 +62,7 @@ describe Travis::Cli::Deploy do
       let(:command) { Travis::Cli::Deploy.new(shell, 'staging', {}) }
 
       before :each do
-        command.stubs(:system)
+        command.stubs(:system).returns(true)
       end
 
       it 'does not switch to the production branch' do
@@ -76,21 +76,21 @@ describe Travis::Cli::Deploy do
       end
 
       it 'pushes to the given remote' do
-        command.expects(:system).with('git push staging HEAD:master')
+        command.expects(:system).with('git push staging HEAD:master -f').returns(true)
         command.invoke
       end
     end
 
     it 'migrates the database if --migrate is given' do
       command = Travis::Cli::Deploy.new(shell, 'production', 'migrate' => true)
-      command.stubs(:system)
-      command.expects(:system).with('heroku run rake db:migrate -r production')
+      command.stubs(:system).returns(true)
+      command.expects(:system).with('heroku run rake db:migrate -r production').returns(true)
       command.invoke
     end
 
     it 'configures the application if --configure is given' do
       command = Travis::Cli::Deploy.new(shell, 'production', 'configure' => true)
-      command.stubs(:system)
+      command.stubs(:system).returns(true)
       command.expects(:configure)
       command.invoke
     end

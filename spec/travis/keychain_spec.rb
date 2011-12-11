@@ -5,7 +5,7 @@ describe Travis::Keychain do
   let(:keychain) { Travis::Keychain.new('hub', shell) }
 
   before :each do
-    keychain.stubs(:system)
+    keychain.stubs(:system).returns(true)
     keychain.stubs(:`)
     keychain.stubs(:clean?).returns(true)
     File.stubs(:read)
