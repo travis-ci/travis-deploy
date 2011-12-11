@@ -1,5 +1,3 @@
-require 'thor'
-
 module Travis
   class Cli
     class Deploy

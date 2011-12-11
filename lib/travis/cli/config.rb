@@ -1,6 +1,4 @@
-require 'thor'
 require 'shellwords'
-require 'fileutils'
 require 'yaml'
 
 module Travis

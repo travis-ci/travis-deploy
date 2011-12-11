@@ -17,6 +17,7 @@ Gem::Specification.new do |s|
   s.require_path = 'lib'
   s.rubyforge_project = '[none]'
 
+  s.add_dependency 'thor'
   s.add_development_dependency 'rspec'
   s.add_development_dependency 'mocha'
 end
