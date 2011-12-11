@@ -1,3 +1,6 @@
+script: rspec
 rvm:
   - 1.9.2
   - jruby
+notifications:
+  irc: "irc.freenode.org#travis"
