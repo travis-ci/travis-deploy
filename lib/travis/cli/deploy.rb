@@ -77,6 +77,12 @@ module Travis
         def migrate
           say 'Running migrations'
           run "heroku run rake db:migrate -r #{remote}"
+          restart
+        end
+
+        def restart
+          say 'Restarting the app ...'
+          run "heroku restart -r #{remote}"
         end
     end
   end
