@@ -17,7 +17,6 @@ module Travis
       def invoke
         store
         push
-        restart if restart?
       end
 
       protected
@@ -49,18 +48,9 @@ module Travis
           run "heroku config:add travis_config=#{config} -r #{remote}", :echo => "heroku config:add travis_config=... -r #{app}"
         end
 
-        def restart
-          say 'Restarting the app ...'
-          run "heroku restart -r #{remote}"
-        end
-
         def backup
           say 'Backing up the old config file ...'
           run "cp #{filename} #{filename}.backup"
-        end
-
-        def restart?
-          !!options['restart']
         end
 
         def backup?

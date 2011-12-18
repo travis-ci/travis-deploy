@@ -67,7 +67,7 @@ module Travis
         end
 
         def configure
-          Config.new(shell, remote, :restart => false).invoke
+          Config.new(shell, remote, {}).invoke
         end
 
         def migrate?

@@ -29,17 +29,5 @@ describe Travis::Cli::Config do
       command.expects(:run).with { |cmd, options| cmd =~ /heroku config:add travis_config=.* -r staging/m }
       command.invoke
     end
-
-    it 'restarts the app when --restart is given' do
-      command = Travis::Cli::Config.new(shell, 'staging', 'restart' => true)
-      command.expects(:restart)
-      command.invoke
-    end
-
-    it 'does not restart the app when --restart is not given' do
-      command = Travis::Cli::Config.new(shell, 'staging', {})
-      command.expects(:restart).never
-      command.invoke
-    end
   end
 end
