@@ -88,6 +88,13 @@ describe Travis::Cli::Deploy do
       command.invoke
     end
 
+    it 'restarts the app when the database is migrated' do
+      command = Travis::Cli::Deploy.new(shell, 'production', 'migrate' => true)
+      command.stubs(:system).returns(true)
+      command.expects(:system).with('heroku restart -r production').returns(true)
+      command.invoke
+    end
+
     it 'configures the application if --configure is given' do
       command = Travis::Cli::Deploy.new(shell, 'production', 'configure' => true)
       command.stubs(:system).returns(true)
