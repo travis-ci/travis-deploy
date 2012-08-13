@@ -32,10 +32,14 @@ module Travis
 
         if response.code.to_i == 200
           public_key = MultiJson.decode(response.body)['public_key']
-          # for unknown reason ruby 1.9.3 will not work with
-          # BEGIN RSA PUBLIC KEY, while jruby works with both
-          public_key.gsub!('RSA PUBLIC KEY', 'PUBLIC KEY')
-          OpenSSL::PKey::RSA.new(public_key)
+          begin
+            OpenSSL::PKey::RSA.new(public_key)
+          rescue OpenSSL::PKey::RSAError
+            # unsure why, but it seems that some keys are generated in a
+            # wrong way
+            public_key.gsub!('RSA PUBLIC KEY', 'PUBLIC KEY')
+            OpenSSL::PKey::RSA.new(public_key)
+          end
         else
           raise FetchKeyError
         end
