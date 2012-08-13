@@ -6,9 +6,10 @@ module Travis
   autoload :Keychain, 'travis/keychain'
 
   class Cli < Thor
-    autoload :Config, 'travis/cli/config'
-    autoload :Deploy, 'travis/cli/deploy'
-    autoload :Helper, 'travis/cli/helper'
+    autoload :Config,    'travis/cli/config'
+    autoload :Deploy,    'travis/cli/deploy'
+    autoload :Helper,    'travis/cli/helper'
+    autoload :SecureKey, 'travis/cli/secure_key'
 
     namespace 'travis'
 
@@ -25,6 +26,23 @@ module Travis
 
     def deploy(remote)
       Deploy.new(shell, remote, options).invoke
+    end
+
+    desc 'encrypt <slug> <secret>', 'Encrypt string for a repository'
+    def encrypt(slug, secret)
+      puts "\nAbout to encrypt '#{secret}' for '#{slug}'\n\n"
+
+      encrypted = nil
+      begin
+        encrypted = SecureKey.new(slug).encrypt(secret)
+      rescue SecureKey::FetchKeyError
+        abort 'There was an error while fetching public key, please check if you entered correct slug'
+      end
+
+      puts "Please add the following to your .travis.yml file:"
+      puts ""
+      puts "  secure: \"#{Base64.encode64(encrypted).strip.gsub("\n", "\\n")}\""
+      puts ""
     end
   end
 end
