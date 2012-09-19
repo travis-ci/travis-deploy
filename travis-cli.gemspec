@@ -4,7 +4,7 @@ $:.unshift File.expand_path('../lib', __FILE__)
 require 'travis_cli/version'
 
 Gem::Specification.new do |s|
-  s.name         = "travis-cli"
+  s.name         = "travis"
   s.version      = TravisCli::VERSION
   s.authors      = ["Travis CI"]
   s.email        = "contact@travis-ci.org"
@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
   s.rubyforge_project = '[none]'
 
   s.add_dependency 'thor'
+  s.add_dependency 'multi_json'
   s.add_development_dependency 'rspec'
   s.add_development_dependency 'mocha'
 end
