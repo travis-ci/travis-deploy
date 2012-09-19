@@ -14,6 +14,7 @@ module Travis
     namespace 'travis'
 
     desc 'config', 'Sync config between keychain, app and local working directory'
+    method_option :env,    :aliases => '-e', :type => :string
     method_option :source, :aliases => '-s', :type => :string
     method_option :backup, :aliases => '-b', :type => :boolean, :default => false
 

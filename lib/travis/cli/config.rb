@@ -6,12 +6,13 @@ module Travis
     class Config
       include Helper
 
-      attr_reader :shell, :remote, :options
+      attr_reader :shell, :remote, :env, :options
 
       def initialize(shell, remote, options)
         @remote = remote
         @options = options
         @shell = shell
+        @env = options['env'] || remote
       end
 
       def invoke
@@ -48,8 +49,8 @@ module Travis
 
         def push
           say 'Configuring the app ...'
-          config = Shellwords.escape(YAML.dump(YAML.load(self.config)[remote]))
-          run "heroku config:add travis_config=#{config} -r #{remote}", :echo => "heroku config:add travis_config=... -r #{app}"
+          config = Shellwords.escape(YAML.dump(YAML.load(self.config)[env]))
+          run "heroku config:add travis_config=#{config} -r #{remote}", :echo => "heroku config:add travis_config=... -r #{remote}"
         end
 
         def backup
