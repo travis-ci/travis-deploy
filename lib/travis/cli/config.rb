@@ -15,7 +15,7 @@ module Travis
       end
 
       def invoke
-        store
+        store unless options['source']
         push
       end
 
@@ -30,7 +30,11 @@ module Travis
         end
 
         def config
-          @config ||= keychain.fetch
+          @config ||= source || keychain.fetch
+        end
+
+        def source
+          File.read(options['source']) if options['source']
         end
 
         def keychain

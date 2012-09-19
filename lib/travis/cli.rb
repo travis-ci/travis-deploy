@@ -13,7 +13,8 @@ module Travis
     namespace 'travis'
 
     desc 'config', 'Sync config between keychain, app and local working directory'
-    method_option :backup,  :aliases => '-b', :type => :boolean, :default => false
+    method_option :source, :aliases => '-s', :type => :string
+    method_option :backup, :aliases => '-b', :type => :boolean, :default => false
 
     def config(remote)
       Config.new(shell, remote, options).invoke
