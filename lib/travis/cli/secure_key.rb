@@ -1,5 +1,5 @@
 # encoding: utf-8
-require 'net/http'
+require 'net/https'
 require 'multi_json'
 require 'openssl'
 require 'base64'
@@ -23,9 +23,12 @@ module Travis
       end
 
       def fetch_key
-        uri = URI.parse("http://travis-ci.org/#{slug}.json")
+        uri = URI.parse("https://travis-ci.org/#{slug}.json")
 
         http = Net::HTTP.new(uri.host, uri.port)
+        http.use_ssl = true
+        http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+        
         request = Net::HTTP::Get.new(uri.request_uri)
 
         response = http.request(request)
