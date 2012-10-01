@@ -23,9 +23,10 @@ module Travis
       end
 
       def fetch_key
-        uri = URI.parse("http://travis-ci.org/#{slug}.json")
+        uri = URI.parse("https://travis-ci.org/#{slug}.json")
 
         http = Net::HTTP.new(uri.host, uri.port)
+        http.use_ssl = true
         request = Net::HTTP::Get.new(uri.request_uri)
 
         response = http.request(request)
