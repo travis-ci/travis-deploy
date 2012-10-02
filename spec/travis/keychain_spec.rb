@@ -5,10 +5,10 @@ describe Travis::Keychain do
   let(:keychain) { Travis::Keychain.new('hub', shell) }
 
   before :each do
-    keychain.stubs(:system).returns(true)
-    keychain.stubs(:`)
-    keychain.stubs(:clean?).returns(true)
-    File.stubs(:read)
+    keychain.stub(:system => true)
+    keychain.stub(:`)
+    keychain.stub(:clean? => true)
+    File.stub(:read)
   end
 
   def fetch
@@ -19,23 +19,23 @@ describe Travis::Keychain do
 
   describe 'fetch' do
     it 'changes to the keychain directory' do
-      Dir.expects(:chdir).with { |path| path =~ %r(/travis-keychain$) }
+      Dir.should_receive(:chdir).with { |path| path =~ %r(/travis-keychain$) }
       fetch
     end
 
     it 'errors if the working directory is dirty' do
-      keychain.stubs(:clean?).returns(false)
-      keychain.expects(:error).with('There are unstaged changes in your travis-keychain working directory.')
+      keychain.stub(:clean? => false)
+      keychain.should_receive(:error).with('There are unstaged changes in your travis-keychain working directory.')
       fetch
     end
 
     it 'pulls changes from origin' do
-      keychain.expects(:run).with('git pull')
+      keychain.should_receive(:run).with('git pull')
       fetch
     end
 
     it 'reads the configuration' do
-      File.expects(:read).with { |path| path =~ %r(config/travis.hub.yml$) }
+      File.should_receive(:read).with { |path| path =~ %r(config/travis.hub.yml$) }
       fetch
     end
   end

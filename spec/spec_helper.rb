@@ -1,12 +1,11 @@
 ENV['RAILS_ENV'] = ENV['ENV'] = 'test'
 
-RSpec.configure do |c|
-  c.mock_with :mocha
-  c.before(:each) { Time.now.utc.tap { | now| Time.stubs(:now).returns(now) } }
-end
-
 require 'travis/cli'
-require 'mocha'
+require 'webmock/rspec'
+
+RSpec.configure do |c|
+  c.before(:each) { Time.stub(:now => Time.now.utc) }
+end
 
 module Mock
   class Shell
@@ -31,4 +30,3 @@ module Kernel
     $stdout = STDOUT
   end
 end
-
