@@ -1,7 +1,7 @@
 ENV['RAILS_ENV'] = ENV['ENV'] = 'test'
 
 RSpec.configure do |c|
-  c.before(:each) { Time.now.utc.tap { | now| Time.stub(:now => now) } }
+  c.before(:each) { Time.stub(:now => Time.now.utc) }
 end
 
 require 'travis/cli'
@@ -29,4 +29,3 @@ module Kernel
     $stdout = STDOUT
   end
 end
-
