@@ -1,12 +1,10 @@
 ENV['RAILS_ENV'] = ENV['ENV'] = 'test'
 
 RSpec.configure do |c|
-  c.mock_with :mocha
-  c.before(:each) { Time.now.utc.tap { | now| Time.stubs(:now).returns(now) } }
+  c.before(:each) { Time.now.utc.tap { | now| Time.stub(:now => now) } }
 end
 
 require 'travis/cli'
-require 'mocha'
 
 module Mock
   class Shell

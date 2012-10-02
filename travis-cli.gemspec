@@ -19,6 +19,5 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'thor'
   s.add_dependency 'multi_json'
-  s.add_development_dependency 'rspec'
-  s.add_development_dependency 'mocha'
+  s.add_development_dependency 'rspec', '~> 2.6'
 end
