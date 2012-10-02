@@ -1,10 +1,11 @@
 ENV['RAILS_ENV'] = ENV['ENV'] = 'test'
 
+require 'travis/cli'
+require 'webmock/rspec'
+
 RSpec.configure do |c|
   c.before(:each) { Time.stub(:now => Time.now.utc) }
 end
-
-require 'travis/cli'
 
 module Mock
   class Shell
