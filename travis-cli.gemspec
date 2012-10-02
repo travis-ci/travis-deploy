@@ -20,4 +20,5 @@ Gem::Specification.new do |s|
   s.add_dependency 'thor'
   s.add_dependency 'multi_json'
   s.add_development_dependency 'rspec', '~> 2.6'
+  s.add_development_dependency 'webmock', '~> 1.8'
 end
