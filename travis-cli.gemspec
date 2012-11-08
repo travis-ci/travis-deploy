@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |gem|
   gem.name    = 'travis'
-  gem.version = '0.0.7'
+  gem.version = '0.0.8'
 
   gem.authors     = ['Travis CI']
   gem.email       = ['contact@travis-ci.org']
