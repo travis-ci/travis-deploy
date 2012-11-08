@@ -4,7 +4,7 @@ describe Travis::Cli::SecureKey do
   describe 'key' do
     before do
       # Travis API requests redirect to HTTPS
-      stub_request(:any, %r(^http://travis-ci\.org/)).to_return do |request|
+      stub_request(:any, %r(^http://secure.travis-ci\.org/)).to_return do |request|
         {
           :body => '',
           :status => [301, 'Moved Permanently'],
@@ -25,7 +25,7 @@ THug6JpLU0GlRqOr4u9sFuJCKlDjCJV+2vWzP4e+3zrP9hZGdQUcbG2fhSOBn2Wv
 -----END RSA PUBLIC KEY-----
 KEY
 
-      stub_request(:get, "https://travis-ci.org/#{slug}.json").to_return(
+      stub_request(:get, "https://secure.travis-ci.org/#{slug}.json").to_return(
         {
           :body => %({"id":4756,"slug":#{MultiJson.dump(slug)},"description":"Travis CLI tool","public_key":#{MultiJson.dump(public_key)},"last_build_id":2619122,"last_build_number":"19","last_build_status":0,"last_build_result":0,"last_build_duration":64,"last_build_language":null,"last_build_started_at":"2012-10-01T04:01:10Z","last_build_finished_at":"2012-10-01T04:01:51Z"}),
           :status => [200, 'OK']
