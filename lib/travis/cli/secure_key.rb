@@ -1,5 +1,6 @@
 # encoding: utf-8
 require 'net/http'
+require 'net/https'
 require 'multi_json'
 require 'openssl'
 require 'base64'
