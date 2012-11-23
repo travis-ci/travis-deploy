@@ -9,10 +9,11 @@ module Travis
   class Cli
     class SecureKey
       class FetchKeyError < StandardError; end
-      attr_reader :slug
+      attr_reader :slug, :host
 
-      def initialize(slug)
+      def initialize(slug, host = nil)
         @slug = slug
+        @host = host || "api.travis-ci.org"
       end
 
       def encrypt(secret)
@@ -24,17 +25,18 @@ module Travis
       end
 
       def fetch_key
-        uri = URI.parse("https://secure.travis-ci.org/#{slug}.json")
+        uri = URI.parse("https://#{host}/repos/#{slug}")
 
         http = Net::HTTP.new(uri.host, uri.port)
         http.use_ssl = true
 
-        request = Net::HTTP::Get.new(uri.request_uri)
+        request = Net::HTTP::Get.new(uri.request_uri, 'Accept' => 'application/vnd.travis-ci.2+json')
 
         response = http.request(request)
 
         if response.code.to_i == 200
-          public_key = MultiJson.decode(response.body)['public_key']
+          body = MultiJson.decode(response.body)
+          public_key = body['repo']['public_key']
           begin
             OpenSSL::PKey::RSA.new(public_key)
           rescue OpenSSL::PKey::RSAError

@@ -31,12 +31,14 @@ module Travis
     end
 
     desc 'encrypt <slug> <secret>', 'Encrypt string for a repository'
+    method_option :host, :aliases => '-h', :type => :string
+
     def encrypt(slug, secret)
       puts "\nAbout to encrypt '#{secret}' for '#{slug}'\n\n"
 
       encrypted = nil
       begin
-        encrypted = SecureKey.new(slug).encrypt(secret)
+        encrypted = SecureKey.new(slug, options[:host]).encrypt(secret)
       rescue SecureKey::FetchKeyError
         abort 'There was an error while fetching public key, please check if you entered correct slug'
       end
