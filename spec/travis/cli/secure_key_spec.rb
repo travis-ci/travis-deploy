@@ -25,9 +25,9 @@ THug6JpLU0GlRqOr4u9sFuJCKlDjCJV+2vWzP4e+3zrP9hZGdQUcbG2fhSOBn2Wv
 -----END RSA PUBLIC KEY-----
 KEY
 
-      stub_request(:get, "https://foo.travis-ci.org/repos/#{slug}").to_return(
+      stub_request(:get, "https://foo.travis-ci.org/repos/#{slug}/key").to_return(
         {
-          :body => %({"repo": {"id":4756,"slug":#{MultiJson.dump(slug)},"description":"Travis CLI tool","public_key":#{MultiJson.dump(public_key)},"last_build_id":2619122,"last_build_number":"19","last_build_status":0,"last_build_result":0,"last_build_duration":64,"last_build_language":null,"last_build_started_at":"2012-10-01T04:01:10Z","last_build_finished_at":"2012-10-01T04:01:51Z"}}),
+          :body => %({"key":#{MultiJson.dump(public_key)}}),
           :status => [200, 'OK']
         }
       )
@@ -51,9 +51,9 @@ THug6JpLU0GlRqOr4u9sFuJCKlDjCJV+2vWzP4e+3zrP9hZGdQUcbG2fhSOBn2Wv
 -----END RSA PUBLIC KEY-----
 KEY
 
-      stub_request(:get, "https://api.travis-ci.org/repos/#{slug}").to_return(
+      stub_request(:get, "https://api.travis-ci.org/repos/#{slug}/key").to_return(
         {
-          :body => %({"repo": {"id":4756,"slug":#{MultiJson.dump(slug)},"description":"Travis CLI tool","public_key":#{MultiJson.dump(public_key)},"last_build_id":2619122,"last_build_number":"19","last_build_status":0,"last_build_result":0,"last_build_duration":64,"last_build_language":null,"last_build_started_at":"2012-10-01T04:01:10Z","last_build_finished_at":"2012-10-01T04:01:51Z"}}),
+          :body => %({"key":#{MultiJson.dump(public_key)}}),
           :status => [200, 'OK']
         }
       ).with(:headers => {'Accept' => 'application/vnd.travis-ci.2+json' })

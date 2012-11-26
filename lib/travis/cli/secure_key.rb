@@ -25,7 +25,7 @@ module Travis
       end
 
       def fetch_key
-        uri = URI.parse("https://#{host}/repos/#{slug}")
+        uri = URI.parse("https://#{host}/repos/#{slug}/key")
 
         http = Net::HTTP.new(uri.host, uri.port)
         http.use_ssl = true
@@ -36,7 +36,7 @@ module Travis
 
         if response.code.to_i == 200
           body = MultiJson.decode(response.body)
-          public_key = body['repo']['public_key']
+          public_key = body['key']
           begin
             OpenSSL::PKey::RSA.new(public_key)
           rescue OpenSSL::PKey::RSAError
