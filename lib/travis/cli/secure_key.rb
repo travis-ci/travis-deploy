@@ -28,7 +28,11 @@ module Travis
         uri = URI.parse("https://#{host}/repos/#{slug}/key")
 
         http = Net::HTTP.new(uri.host, uri.port)
-        http.use_ssl = true
+        http.use_ssl  = true
+
+        if RUBY_PLATFORM =~ /mswin32/
+          http.ca_file  = File.expand_path("../../certs/cacert.pem", __FILE__)
+        end
 
         request = Net::HTTP::Get.new(uri.request_uri, 'Accept' => 'application/vnd.travis-ci.2+json')
 
