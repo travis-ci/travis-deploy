@@ -45,7 +45,7 @@ module Travis
 
       puts "Please add the following to your .travis.yml file:"
       puts ""
-      puts "  secure: \"#{Base64.encode64(encrypted).strip.gsub("\n", "\\n")}\""
+      puts "    - secure: \"#{Base64.encode64(encrypted).strip.gsub("\n", "\\n")}\""
       puts ""
     end
   end
