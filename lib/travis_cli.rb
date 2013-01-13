@@ -1,1 +1,1 @@
-require 'travis/cli'
+require 'travis/trvs'

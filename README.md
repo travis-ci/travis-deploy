@@ -1,4 +1,4 @@
-# Travis CLI
+# Travis Deploy Tool
 
 Deployment tool for Travis CI
 

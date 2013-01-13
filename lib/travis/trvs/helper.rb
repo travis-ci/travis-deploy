@@ -1,5 +1,5 @@
 module Travis
-  class Cli
+  class Trvs
     module Helper
       protected
 

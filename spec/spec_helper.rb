@@ -1,6 +1,6 @@
 ENV['RAILS_ENV'] = ENV['ENV'] = 'test'
 
-require 'travis/cli'
+require 'travis/trvs'
 require 'webmock/rspec'
 
 RSpec.configure do |c|
