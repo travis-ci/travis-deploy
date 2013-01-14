@@ -1,5 +1,5 @@
 module Travis
-  class Cli
+  class Deploy
     class Deploy
       include Helper
 

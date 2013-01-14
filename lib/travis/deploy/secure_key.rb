@@ -6,7 +6,7 @@ require 'openssl'
 require 'base64'
 
 module Travis
-  class Cli
+  class Deploy
     class SecureKey
       class FetchKeyError < StandardError; end
       attr_reader :slug, :host

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Travis::Cli::SecureKey do
+describe Travis::Deploy::SecureKey do
   describe 'key' do
     before do
       # Travis API requests redirect to HTTPS
@@ -32,11 +32,11 @@ KEY
         }
       )
 
-      secure_key = Travis::Cli::SecureKey.new(slug, 'foo.travis-ci.org')
+      secure_key = Travis::Deploy::SecureKey.new(slug, 'foo.travis-ci.org')
 
       expect{
         secure_key.key
-      }.to_not raise_error(Travis::Cli::SecureKey::FetchKeyError)
+      }.to_not raise_error(Travis::Deploy::SecureKey::FetchKeyError)
 
       secure_key.key.to_pem.should == OpenSSL::PKey::RSA.new(public_key).to_pem
     end
@@ -58,11 +58,11 @@ KEY
         }
       ).with(:headers => {'Accept' => 'application/vnd.travis-ci.2+json' })
 
-      secure_key = Travis::Cli::SecureKey.new(slug)
+      secure_key = Travis::Deploy::SecureKey.new(slug)
 
       expect{
         secure_key.key
-      }.to_not raise_error(Travis::Cli::SecureKey::FetchKeyError)
+      }.to_not raise_error(Travis::Deploy::SecureKey::FetchKeyError)
 
       secure_key.key.to_pem.should == OpenSSL::PKey::RSA.new(public_key).to_pem
     end
