@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 Gem::Specification.new do |gem|
-  gem.name    = 'trvs'
+  gem.name    = 'travis-deploy'
   gem.version = '0.0.10'
 
   gem.authors     = ['Travis Deploy Tool']

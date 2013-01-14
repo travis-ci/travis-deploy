@@ -5,11 +5,11 @@ $stdout.sync = true
 module Travis
   autoload :Keychain, 'travis/keychain'
 
-  class Trvs < Thor
-    autoload :Config,    'travis/trvs/config'
-    autoload :Deploy,    'travis/trvs/deploy'
-    autoload :Helper,    'travis/trvs/helper'
-    autoload :SecureKey, 'travis/trvs/secure_key'
+  class Deploy < Thor
+    autoload :Config,    'travis/deploy/config'
+    autoload :Deploy,    'travis/deploy/deploy'
+    autoload :Helper,    'travis/deploy/helper'
+    autoload :SecureKey, 'travis/deploy/secure_key'
 
     namespace 'travis'
 

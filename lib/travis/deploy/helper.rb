@@ -1,5 +1,5 @@
 module Travis
-  class Trvs
+  class Deploy
     module Helper
       protected
 

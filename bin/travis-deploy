@@ -3,7 +3,7 @@
 $: << File.expand_path('../../lib', __FILE__)
 
 require 'rubygems'
-require 'travis/trvs'
+require 'travis/deploy'
 require 'thor/runner'
 
 klass, task = Thor::Util.find_class_and_task_by_namespace("travis:#{ARGV.shift}")

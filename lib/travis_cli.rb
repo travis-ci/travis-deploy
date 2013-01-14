@@ -1,1 +1,1 @@
-require 'travis/trvs'
+require 'travis/deploy'

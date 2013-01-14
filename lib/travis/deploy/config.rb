@@ -2,7 +2,7 @@ require 'shellwords'
 require 'yaml'
 
 module Travis
-  class Trvs
+  class Deploy
     class Config
       include Helper
 
