@@ -1,6 +1,6 @@
 module Travis
   class Keychain
-    include Cli::Helper
+    include Deploy::Helper
 
     attr_reader :app, :shell, :dir
 

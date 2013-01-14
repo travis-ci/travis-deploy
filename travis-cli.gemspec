@@ -1,10 +1,10 @@
 # encoding: utf-8
 
 Gem::Specification.new do |gem|
-  gem.name    = 'travis'
+  gem.name    = 'travis-deploy'
   gem.version = '0.0.10'
 
-  gem.authors     = ['Travis CI']
+  gem.authors     = ['Travis Deploy Tool']
   gem.email       = ['contact@travis-ci.org']
   gem.description = 'A command-line interface to Travis CI'
   gem.summary     = gem.description

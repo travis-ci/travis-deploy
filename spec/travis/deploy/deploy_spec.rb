@@ -1,12 +1,12 @@
 require 'spec_helper'
 
-describe Travis::Cli::Deploy do
+describe Travis::Deploy::Deploy do
   let(:shell)  { Mock::Shell.new }
 
   before :each do
     $stdout = StringIO.new
-    Travis::Cli::Deploy.any_instance.stub(:clean? => true)
-    Travis::Cli::Deploy.any_instance.stub(:branch => 'master')
+    Travis::Deploy::Deploy.any_instance.stub(:clean? => true)
+    Travis::Deploy::Deploy.any_instance.stub(:branch => 'master')
     File.stub(:open)
   end
 
@@ -16,7 +16,7 @@ describe Travis::Cli::Deploy do
 
   describe 'with a clean working directory' do
     describe 'given remote "production"' do
-      let(:command) { Travis::Cli::Deploy.new(shell, 'production', {}) }
+      let(:command) { Travis::Deploy::Deploy.new(shell, 'production', {}) }
 
       before :each do
         command.stub(:system => true)
@@ -59,7 +59,7 @@ describe Travis::Cli::Deploy do
     end
 
     describe 'given the remote "staging"' do
-      let(:command) { Travis::Cli::Deploy.new(shell, 'staging', {}) }
+      let(:command) { Travis::Deploy::Deploy.new(shell, 'staging', {}) }
 
       before :each do
         command.stub(:system => true)
@@ -82,21 +82,21 @@ describe Travis::Cli::Deploy do
     end
 
     it 'migrates the database if --migrate is given' do
-      command = Travis::Cli::Deploy.new(shell, 'production', 'migrate' => true)
+      command = Travis::Deploy::Deploy.new(shell, 'production', 'migrate' => true)
       command.stub(:system => true)
       command.should_receive(:system).with('heroku run rake db:migrate -r production').and_return(true)
       command.invoke
     end
 
     it 'restarts the app when the database is migrated' do
-      command = Travis::Cli::Deploy.new(shell, 'production', 'migrate' => true)
+      command = Travis::Deploy::Deploy.new(shell, 'production', 'migrate' => true)
       command.stub(:system => true)
       command.should_receive(:system).with('heroku restart -r production').and_return(true)
       command.invoke
     end
 
     it 'configures the application if --configure is given' do
-      command = Travis::Cli::Deploy.new(shell, 'production', 'configure' => true)
+      command = Travis::Deploy::Deploy.new(shell, 'production', 'configure' => true)
       command.stub(:system => true)
       command.should_receive(:configure)
       command.invoke
@@ -108,7 +108,7 @@ describe Travis::Cli::Deploy do
     end
 
     it 'outputs an error message' do
-      command = Travis::Cli::Deploy.new(shell, 'production', {})
+      command = Travis::Deploy::Deploy.new(shell, 'production', {})
       command.stub(:clean? => false)
       command.should_receive(:error).with('There are unstaged changes.')
       command.invoke
