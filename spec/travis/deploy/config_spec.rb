@@ -7,14 +7,14 @@ describe Travis::Deploy::Config do
   before :each do
     Travis::Deploy::Config.any_instance.stub(:clean? => true)
     Travis::Deploy::Config.any_instance.stub(:run)
-    Travis::Keychain.any_instance.stub(:fetch => config)
+    Travis::Keychain.any_instance.stub(:source => config)
     File.stub(:open)
   end
 
   describe 'sync' do
     it 'fetches the config from the keychain' do
       command = Travis::Deploy::Config.new(shell, 'staging', {})
-      command.send(:keychain).should_receive(:fetch).and_return(config)
+      command.send(:keychain).should_receive(:source).and_return(config)
       command.invoke
     end
 

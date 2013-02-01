@@ -17,9 +17,12 @@ module Travis
     method_option :env,    :aliases => '-e', :type => :string
     method_option :source, :aliases => '-s', :type => :string
     method_option :backup, :aliases => '-b', :type => :boolean, :default => false
+    method_option :pretend, :type => :boolean, :default => false
+    method_option :app, :type => :string
 
     def config(remote)
-      Config.new(shell, remote, options).invoke
+      config = Config.new(shell, remote, options)
+      options[:pretend] ? config.pretend : config.invoke
     end
 
     desc 'deploy', 'Deploy to the given remote'

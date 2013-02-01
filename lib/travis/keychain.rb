@@ -15,7 +15,30 @@ module Travis
       read
     end
 
+    def source
+      @source ||= fetch
+    end
+
+    def includes(name)
+      include_files[name]
+    end
+
     protected
+
+      def include_files
+        @include_files ||= begin
+          contents = {}
+
+          chdir do
+            Dir['config/includes/*.yml'].each do |path|
+              name = File.basename(path).sub(/\.yml$/, '')
+              contents[name] = YAML.load(File.read(path))
+            end
+          end
+
+          contents
+        end
+      end
 
       def pull
         error 'There are unstaged changes in your travis-keychain working directory.' unless clean?

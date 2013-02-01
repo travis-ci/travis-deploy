@@ -4,6 +4,7 @@ require 'yaml'
 module Travis
   class Deploy
     class Config
+      autoload :Builder, 'travis/deploy/config/builder'
       include Helper
 
       attr_reader :shell, :remote, :env, :options
@@ -20,18 +21,27 @@ module Travis
         push
       end
 
+      def pretend
+        say 'Config to upload:'
+        say YAML.dump(config)
+      end
+
       protected
 
         def app
           @app ||= begin
-            app = File.basename(Dir.pwd).gsub('travis-', '')
+            app = options[:app] || File.basename(Dir.pwd).gsub('travis-', '')
             app = 'web' if app == 'ci'
             app
           end
         end
 
         def config
-          @config ||= source || keychain.fetch
+          @config ||= source ? YAML.load(source) : Builder.new(keychain, env).build
+        end
+
+        def yaml_config
+          @yaml_config ||= source || keychain.source
         end
 
         def source
@@ -44,13 +54,13 @@ module Travis
 
         def store
           backup if backup?
-          File.open(filename, 'w+') { |f| f.write(config) }
+          File.open(filename, 'w+') { |f| f.write(yaml_config) }
         end
 
         def push
           say 'Configuring the app ...'
-          config = Shellwords.escape(YAML.dump(YAML.load(self.config)[env]))
-          run "heroku config:add travis_config=#{config} -r #{remote}", :echo => "heroku config:add travis_config=... -r #{remote}"
+          yaml = Shellwords.escape(YAML.dump(config))
+          run "heroku config:add travis_config=#{yaml} -r #{remote}", :echo => "heroku config:add travis_config=... -r #{remote}"
         end
 
         def backup
