@@ -48,9 +48,13 @@ module Travis
           @keychain ||= Keychain.new(app, shell)
         end
 
+        def development_config
+          Builder.new(keychain, 'development').build
+        end
+
         def store
           backup if backup?
-          File.open(filename, 'w+') { |f| f.write(yaml_config) }
+          File.open(filename, 'w+') { |f| f.write(YAML.dump(development_config)) }
         end
 
         def push
