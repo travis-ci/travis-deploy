@@ -18,7 +18,7 @@ module Travis
 
       def invoke
         store unless options['source']
-        push
+        push unless @env == 'development'
       end
 
       def pretend
