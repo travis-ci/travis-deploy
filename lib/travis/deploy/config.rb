@@ -49,7 +49,7 @@ module Travis
         end
 
         def development_config
-          Builder.new(keychain, 'development').build
+          { 'development' => Builder.new(keychain, 'development').build }
         end
 
         def store
