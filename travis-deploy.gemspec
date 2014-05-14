@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |gem|
   gem.name    = 'travis-deploy'
-  gem.version = '0.2.0'
+  gem.version = '0.2.1'
 
   gem.authors     = ['Travis Deploy Tool']
   gem.email       = ['contact@travis-ci.org']
