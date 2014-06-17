@@ -4,7 +4,7 @@ module Travis
 
     attr_reader :app, :shell, :dir
 
-    def initialize(app, shell, dir = '../travis-keychain')
+    def initialize(app, shell, dir = ENV.fetch('TRAVIS_KEYCHAIN', '../travis-keychain'))
       @app = app
       @shell = shell
       @dir = File.expand_path(dir)

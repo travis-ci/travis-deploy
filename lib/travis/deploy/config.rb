@@ -29,7 +29,7 @@ module Travis
       protected
 
         def app
-          @app ||= options[:app] || File.basename(Dir.pwd).gsub('travis-', '')
+          @app ||= options[:app] || File.basename(Dir.pwd).gsub(/travis-(pro-)?/, '')
         end
 
         def config
